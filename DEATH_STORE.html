@@ -1,0 +1,149 @@
+
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>DEATH STORE</title>
+
+<style>
+*{
+margin:0;
+padding:0;
+box-sizing:border-box;
+font-family:Arial, Helvetica, sans-serif;
+}
+
+body{
+background: radial-gradient(circle at top,#3b0a59,#000);
+color:white;
+height:100vh;
+display:flex;
+justify-content:center;
+align-items:center;
+}
+
+.container{
+background:rgba(0,0,0,0.6);
+padding:40px;
+border-radius:15px;
+width:350px;
+text-align:center;
+backdrop-filter: blur(10px);
+animation: aparecer 0.8s ease;
+}
+
+h1{
+color:#c77dff;
+margin-bottom:20px;
+letter-spacing:3px;
+}
+
+input{
+width:100%;
+padding:10px;
+margin:10px 0;
+border:none;
+border-radius:8px;
+outline:none;
+}
+
+button{
+width:100%;
+padding:10px;
+border:none;
+border-radius:8px;
+background:#7b2cbf;
+color:white;
+cursor:pointer;
+transition:0.3s;
+}
+
+button:hover{
+background:#9d4edd;
+transform:scale(1.05);
+}
+
+#resultado{
+margin-top:20px;
+font-weight:bold;
+}
+
+@keyframes aparecer{
+from{opacity:0; transform:translateY(-20px);}
+to{opacity:1; transform:translateY(0);}
+}
+</style>
+</head>
+
+<body>
+
+<div class="container" id="loginBox">
+<h1>DEATH STORE</h1>
+<input type="text" id="loginKey" placeholder="Digite sua KEY">
+<button onclick="login()">Entrar</button>
+<p id="erro" style="color:red;"></p>
+</div>
+
+<div class="container" id="painel" style="display:none;">
+<h1>🎁 GERAR PRÊMIO</h1>
+<button onclick="gerarPremio()">Girar</button>
+<p id="resultado"></p>
+</div>
+
+<script>
+
+const loginKeys = ["ACESSO-001","ACESSO-002","ACESSO-003"];
+
+function login(){
+let key = document.getElementById("loginKey").value;
+let erro = document.getElementById("erro");
+
+if(localStorage.getItem("login_"+key)){
+erro.innerText = "❌ Essa key já foi usada!";
+return;
+}
+
+if(loginKeys.includes(key)){
+localStorage.setItem("login_"+key,"usado");
+document.getElementById("loginBox").style.display="none";
+document.getElementById("painel").style.display="block";
+}else{
+erro.innerText = "❌ Key inválida!";
+}
+}
+
+function gerarPremio(){
+
+if(localStorage.getItem("premio_recebido")){
+document.getElementById("resultado").innerText="❌ Você já pegou seu prêmio!";
+return;
+}
+
+let premio = "";
+let chance = Math.random();
+
+if(chance <= 0.01){
+premio = "UNICO-" + gerarCodigo();
+}
+else if(chance <= 0.51){
+premio = "DEATH-" + gerarCodigo();
+}
+else{
+premio = "STORE-" + gerarCodigo();
+}
+
+localStorage.setItem("premio_recebido","sim");
+
+document.getElementById("resultado").innerHTML =
+"🏆 Sua Key prêmio:<br><br>" + premio;
+}
+
+function gerarCodigo(){
+return Math.random().toString(36).substring(2,8).toUpperCase();
+}
+
+</script>
+
+</body>
+</html>
